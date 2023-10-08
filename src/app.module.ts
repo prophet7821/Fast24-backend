@@ -14,6 +14,28 @@ import { PaymentsModule } from "./payments/payments.module";
     BookingModule,
     PaymentsModule,
     MongooseModule.forRoot("mongodb://localhost:27017/fast24"),
+    //@TODO have setup the basic email sending functionality. Will set it up later.
+    // NotificationsModule,
+    // BullModule.forRoot({
+    //   redis: {
+    //     host: "localhost",
+    //     port: 6379,
+    //   },
+    // }),
+    // MailerModule.forRoot({
+    //   transport: {
+    //     host: "smtp.gmail.com",
+    //     port: 587,
+    //     auth: {
+    //       user:
+    //       pass:
+    //     },
+    //   },
+    //   template: {
+    //     dir: join(__dirname, "templates"),
+    //     adapter: new HandlebarsAdapter(),
+    //   },
+    // }),
   ],
 })
 export class AppModule implements NestModule {
