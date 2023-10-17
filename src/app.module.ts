@@ -3,9 +3,10 @@ import { MiddlewareConsumer, Module, NestModule } from "@nestjs/common";
 import { CarsModule } from "./cars/cars.module";
 import { MongooseModule } from "@nestjs/mongoose";
 import { AuthModule } from "./auth/auth.module";
-import * as cors from "cors";
 import { BookingModule } from "./bookings/booking.module";
 import { PaymentsModule } from "./payments/payments.module";
+import { ConfigModule, ConfigService } from "@nestjs/config";
+import * as cors from "cors";
 
 @Module({
   imports: [
@@ -13,7 +14,14 @@ import { PaymentsModule } from "./payments/payments.module";
     AuthModule,
     BookingModule,
     PaymentsModule,
-    MongooseModule.forRoot("mongodb://localhost:27017/fast24"),
+    ConfigModule.forRoot(),
+    MongooseModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => ({
+        uri: configService.get("MONGO_URI"),
+      }),
+      inject: [ConfigService],
+    }),
     //@TODO have setup the basic email sending functionality. Will set it up later.
     // NotificationsModule,
     // BullModule.forRoot({

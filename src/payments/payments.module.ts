@@ -3,13 +3,17 @@ import { Module } from "@nestjs/common";
 import { StripeModule } from "nestjs-stripe";
 import { PaymentsService } from "./payments.service";
 import { PaymentsController } from "./payments.controller";
+import { ConfigModule, ConfigService } from "@nestjs/config";
 
 @Module({
   imports: [
-    StripeModule.forRoot({
-      apiKey:
-        "sk_test_51LJhJ7SCfwlvAQMZaioJ40JmkN9B8pqrDWsytu1deRFfeWZoQ6dCPE0bgaTM9i8a6DkExdupHAsAsPTg06Rj1WyO00s9iQt6FR",
-      apiVersion: "2023-08-16",
+    StripeModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => ({
+        apiKey: configService.get("STRIPE_SECRET"),
+        apiVersion: configService.get("STRIPE_API_VERSION"),
+      }),
+      inject: [ConfigService],
     }),
   ],
   controllers: [PaymentsController],
