@@ -3,6 +3,7 @@ import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 import { Car } from "./cars.schema";
+import { Filter } from "../types/filter.type";
 
 @Injectable()
 export class CarsService {
@@ -43,5 +44,98 @@ export class CarsService {
       { $skip: page * limit },
       { $limit: limit },
     ]);
+  }
+
+  async getCarsByFilter(filter: Filter) {
+    // Deconstruct the filter object for easier access
+    const {
+      acceleration,
+      braking,
+      driveType,
+      handling,
+      launch,
+      modelType,
+      offroad,
+      price,
+      speed,
+      stockSpecs,
+      term,
+    } = filter;
+
+    const pipeline = [
+      {
+        $match: {
+          $expr: {
+            $and: [
+              {
+                $cond: [
+                  { $eq: [driveType.length, 0] },
+                  true,
+                  { $in: ["$driveType", driveType] },
+                ],
+              },
+              {
+                $cond: [
+                  { $eq: [modelType.length, 0] },
+                  true,
+                  { $in: ["$modelType", modelType] },
+                ],
+              },
+              {
+                $cond: [
+                  { $eq: [stockSpecs.length, 0] },
+                  true,
+                  { $in: ["$stockSpecs", stockSpecs] },
+                ],
+              },
+              { $gte: ["$acceleration", acceleration.min] },
+              { $lte: ["$acceleration", acceleration.max] },
+              { $gte: ["$braking", braking.min] },
+              { $lte: ["$braking", braking.max] },
+              { $gte: ["$handling", handling.min] },
+              { $lte: ["$handling", handling.max] },
+              { $gte: ["$launch", launch.min] },
+              { $lte: ["$launch", launch.max] },
+              { $gte: ["$offroad", offroad.min] },
+              { $lte: ["$offroad", offroad.max] },
+              { $gte: ["$price", price.min] },
+              { $lte: ["$price", price.max] },
+              { $gte: ["$speed", speed.min] },
+              { $lte: ["$speed", speed.max] },
+              {
+                $cond: [
+                  { $eq: [term, ""] },
+                  true,
+                  {
+                    $or: [
+                      {
+                        $regexMatch: {
+                          input: "$name",
+                          regex: new RegExp(term, "i"),
+                        },
+                      },
+                      {
+                        $regexMatch: {
+                          input: "$modelType",
+                          regex: new RegExp(term, "i"),
+                        },
+                      },
+                      {
+                        $regexMatch: {
+                          input: "$driveType",
+                          regex: new RegExp(term, "i"),
+                        },
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+        },
+      },
+    ];
+
+    return await this.carModel.aggregate(pipeline).exec();
   }
 }

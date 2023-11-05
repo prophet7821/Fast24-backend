@@ -1,6 +1,8 @@
 // cars.controller.ts
 import { Controller, Get, Param, ParseIntPipe, Query } from "@nestjs/common";
-import { CarsService } from "./cars.service"; // Adjust the path based on your directory structure
+import { CarsService } from "./cars.service";
+import { ParseFilterPipe } from "../pipe/filter.pipe";
+import { Filter } from "../types/filter.type"; // Adjust the path based on your directory structure
 
 @Controller({
   path: "cars",
@@ -15,6 +17,11 @@ export class CarsController {
     @Query("limit", ParseIntPipe) limit: number
   ) {
     return this.carsService.getAllCars(+page, +limit); // Convert strings to numbers with the unary plus operator
+  }
+
+  @Get("filter")
+  async filter(@Query(new ParseFilterPipe()) filterData: Filter) {
+    return this.carsService.getCarsByFilter(filterData);
   }
 
   @Get("q")
