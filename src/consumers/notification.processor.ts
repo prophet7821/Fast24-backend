@@ -1,18 +1,14 @@
-import { Process, Processor } from "@nestjs/bull";
-import { MailerService } from "@nestjs-modules/mailer";
+import {Process, Processor} from "@nestjs/bull";
+import {Job} from "bull";
 
 @Processor("notifications")
 export class NotificationProcessor {
-  constructor(private readonly mailService: MailerService) {}
-  @Process()
-  async sendEmail(job) {
-    const { data } = job;
+    constructor() {
+    }
 
-    await this.mailService.sendMail({
-      ...data,
-      subject: "Testing Nest MailerModule ✔",
-      template: "welcome",
-      context: { user: data.message },
-    });
-  }
+    @Process('email')
+    async sendEmail(job: Job) {
+        const {data} = job;
+        console.log(job);
+    }
 }
