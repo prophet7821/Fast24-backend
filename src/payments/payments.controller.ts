@@ -1,19 +1,27 @@
 //payments.controller.ts
-import { Body, Controller, Post } from "@nestjs/common";
-import { PaymentsService } from "./payments.service";
+import {Body, Controller, Post, UseGuards, Headers, ParseIntPipe} from "@nestjs/common";
+import {PaymentsService} from "./payments.service";
+import {JwtAuthGuard} from "../guards/auth.guard";
+import {User as UserDecorator} from "../decorator/user.decorator";
+import {User} from "../users/users.schema";
 
 @Controller({
-  path: "payments",
-  version: "1",
+    path: "payments",
+    version: "1",
 })
 export class PaymentsController {
-  constructor(private readonly paymentsService: PaymentsService) {}
+    constructor(private readonly paymentsService: PaymentsService) {
+    }
 
-  @Post()
-  createPayment(@Body() paymentsData: { amount: number; currency: string }) {
-    return this.paymentsService.createPaymentIntent(
-      paymentsData.amount,
-      paymentsData.currency
-    );
-  }
+    @Post('createPaymentIntent')
+    @UseGuards(JwtAuthGuard)
+    createPayment(@Body('amount', ParseIntPipe) amount: number,
+                  @Body('currency') currency: string,
+                  @Headers('Idempotency-Key') idempotencyKey: string,) {
+        return this.paymentsService.createPaymentIntent(
+            amount,
+            currency,
+            idempotencyKey,
+        );
+    }
 }
