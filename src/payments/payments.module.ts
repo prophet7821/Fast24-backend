@@ -1,26 +1,18 @@
 //payments.module.ts
-import {Module} from "@nestjs/common";
-import {StripeModule} from "nestjs-stripe";
-import {PaymentsService} from "./payments.service";
-import {PaymentsController} from "./payments.controller";
-import {ConfigModule, ConfigService} from "@nestjs/config";
-import {MongooseModule} from "@nestjs/mongoose";
-import {Payment, PaymentSchema} from "./payments.schema";
+import { Module } from "@nestjs/common";
+import { PaymentsService } from "./payments.service";
+import { PaymentsController } from "./payments.controller";
+import { MongooseModule } from "@nestjs/mongoose";
+import { Payment, PaymentSchema } from "./payments.schema";
+import { StripeModule } from "nestjs-stripe";
 
 @Module({
-    imports: [
-        MongooseModule.forFeature([{name: Payment.name, schema: PaymentSchema}]),
-        StripeModule.forRootAsync({
-            imports: [ConfigModule],
-            useFactory: async (configService: ConfigService) => ({
-                apiKey: configService.get("STRIPE_SECRET"),
-                apiVersion: configService.get("STRIPE_API_VERSION"),
-            }),
-            inject: [ConfigService],
-        }),
-    ],
-    controllers: [PaymentsController],
-    providers: [PaymentsService],
+  imports: [
+    MongooseModule.forFeature([{ name: Payment.name, schema: PaymentSchema }]),
+    StripeModule,
+  ],
+  controllers: [PaymentsController],
+  providers: [PaymentsService],
+  exports: [PaymentsService],
 })
-export class PaymentsModule {
-}
+export class PaymentsModule {}
