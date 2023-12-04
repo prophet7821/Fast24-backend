@@ -19,6 +19,7 @@ import { User as UserDecorator } from "../decorator/user.decorator";
   path: "auth",
   version: "1",
 })
+
 @UseInterceptors(MongooseClassSerializerInterceptor(User))
 export class AuthController {
   constructor(
