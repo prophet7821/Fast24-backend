@@ -4,7 +4,7 @@ import { PaymentsService } from "./payments.service";
 import { PaymentsController } from "./payments.controller";
 import { MongooseModule } from "@nestjs/mongoose";
 import { Payment, PaymentSchema } from "./payments.schema";
-import { StripeModule } from "nestjs-stripe";
+import { StripeModule } from "../stripe/stripe.module";
 
 @Module({
   imports: [

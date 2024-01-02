@@ -1,14 +1,15 @@
 //payments.service.ts
 import {
+  Inject,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
 } from "@nestjs/common";
-import { InjectStripe } from "nestjs-stripe";
 import { Stripe } from "stripe";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 import { Payment } from "./payments.schema";
+import { InjectStripe } from "../stripe/decorators/injectStripe.decorator";
 
 @Injectable()
 export class PaymentsService {

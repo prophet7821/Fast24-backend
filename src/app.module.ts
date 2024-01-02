@@ -6,15 +6,14 @@ import { AuthModule } from "./auth/auth.module";
 import { PaymentsModule } from "./payments/payments.module";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import * as cors from "cors";
-import { OrderModule } from "./order/order.module";
-import { StripeModule } from "nestjs-stripe";
+// import { OrderModule } from "./order/order.module";
+import { StripeModule } from "./stripe/stripe.module";
 
 @Module({
   imports: [
     CarsModule,
     AuthModule,
     PaymentsModule,
-    OrderModule,
     ConfigModule.forRoot(),
     MongooseModule.forRootAsync({
       imports: [ConfigModule],

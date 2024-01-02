@@ -8,7 +8,7 @@ import { NotificationsService } from "./notifications.service";
 export class NotificationsController {
   constructor(private readonly notificationService: NotificationsService) {}
 
-  @Get('send')
+  @Get("send")
   async getNotifications() {
     return await this.notificationService.sendNotification();
   }
