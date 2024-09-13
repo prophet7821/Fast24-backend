@@ -27,9 +27,7 @@ export class UsersService {
         }
       }
 
-      throw new InternalServerErrorException(
-        "An error occurred while signing up"
-      );
+      throw new InternalServerErrorException("Something went wrong!!");
     }
   }
 

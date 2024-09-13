@@ -8,13 +8,20 @@ import { ConfigModule, ConfigService } from "@nestjs/config";
 import * as cors from "cors";
 // import { OrderModule } from "./order/order.module";
 import { StripeModule } from "./stripe/stripe.module";
+import { OrderModule } from "./order/order.module";
+import { EventEmitterModule } from "@nestjs/event-emitter";
 
 @Module({
   imports: [
     CarsModule,
     AuthModule,
     PaymentsModule,
+    OrderModule,
     ConfigModule.forRoot(),
+    EventEmitterModule.forRoot({
+      wildcard: true,
+      delimiter: ".",
+    }),
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({

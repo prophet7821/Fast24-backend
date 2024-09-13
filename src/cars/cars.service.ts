@@ -23,11 +23,11 @@ export class CarsService {
 
   // Fetches a car by its ID.
   async getCarById(id: string): Promise<Car> {
-    const car = await this.carModel.findById(id).exec();
-    if (!car) {
-      throw new NotFoundException(`Car with ID ${id} not found.`);
+    try {
+      return await this.carModel.findById(id).exec();
+    } catch (e) {
+      throw new NotFoundException("No Car Exists with that ID");
     }
-    return car;
   }
 
   async getCarsBySearch(searchString: string, page = 0, limit = 10) {

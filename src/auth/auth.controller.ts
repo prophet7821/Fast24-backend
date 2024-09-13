@@ -9,7 +9,6 @@ import {
   UseInterceptors,
 } from "@nestjs/common";
 import { AuthService } from "./auth.service";
-import { UsersService } from "../users/users.service";
 import { User } from "../users/users.schema";
 import MongooseClassSerializerInterceptor from "../interceptors/mongooseClassSerializer.interceptor";
 import { JwtAuthGuard } from "../guards/auth.guard";
@@ -19,13 +18,9 @@ import { User as UserDecorator } from "../decorator/user.decorator";
   path: "auth",
   version: "1",
 })
-
 @UseInterceptors(MongooseClassSerializerInterceptor(User))
 export class AuthController {
-  constructor(
-    private authService: AuthService,
-    private usersService: UsersService
-  ) {}
+  constructor(private authService: AuthService) {}
 
   @Post("login")
   async login(@Body() loginData: { email: string; password: string }) {
@@ -39,7 +34,7 @@ export class AuthController {
 
   @Post("signup")
   async signUp(@Body() userData: User) {
-    return await this.usersService.createUser(userData);
+    return await this.authService.createUser(userData);
   }
 
   @Get("profile")

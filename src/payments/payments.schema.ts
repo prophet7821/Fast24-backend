@@ -5,7 +5,7 @@ import { User } from "../users/users.schema";
 
 export type PaymentsDocument = HydratedDocument<Payment>;
 
-@Schema({ collection: "payments" })
+@Schema({ collection: "payments", timestamps: true })
 export class Payment {
   @Prop({ type: mongooseSchema.Types.ObjectId, ref: "Car", required: true })
   car: Car;
@@ -30,12 +30,6 @@ export class Payment {
 
   @Prop({ type: String, required: true })
   currency: string;
-
-  @Prop({ type: Date, required: true })
-  createdAt: Date;
-
-  @Prop({ type: Date, required: true })
-  updatedAt: Date;
 
   @Prop({
     type: mongooseSchema.Types.ObjectId,
